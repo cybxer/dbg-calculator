@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DBG Calculator</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* ==================== */
+        /* CSS STYLES           */
+        /* ==================== */
+        :root {
+            --bg-color: #0b0e14;
+            --card-bg: #151921;
+            --primary: #5c5cff;
+            --accent: #00cec9;
+            --text: #e2e8f0;
+            --text-muted: #94a3b8;
+            --border: #2d3748;
+            --gradient: linear-gradient(135deg, #4f46e5 0%, #3b82f6 100%);
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            margin: 0;
+            padding: 40px 20px;
+            line-height: 1.6;
+        }
+
+        .header { text-align: center; margin-bottom: 60px; }
+        h1 { margin: 0; font-size: 2.2rem; font-weight: 700; color: white; letter-spacing: -0.5px; }
+        p.subtitle { color: var(--text-muted); margin-top: 8px; font-size: 0.95rem; }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            padding: 24px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+            border: 1px solid var(--border);
+            transition: all 0.2s ease;
+        }
+        .card:hover {
+            transform: translateY(-2px);
+            border-color: #4f46e5;
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.3);
+        }
+        .card h3 {
+            margin-top: 0;
+            margin-bottom: 10px;
+            color: white;
+            font-size: 1.1rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+        }
+        .card h3::before {
+            content: '';
+            display: inline-block;
+            width: 4px;
+            height: 16px;
+            background: var(--primary);
+            margin-right: 12px;
+            border-radius: 2px;
+        }
+        .card p { font-size: 0.9rem; color: var(--text-muted); margin: 0; }
+
+        label { display: block; margin-top: 20px; margin-bottom: 8px; color: var(--text-muted); font-size: 0.85rem; font-weight: 500; }
+        input, select {
+            width: 100%; padding: 10px 12px; background: #0b0e14;
+            border: 1px solid var(--border); border-radius: 6px; color: white;
+            font-family: inherit; box-sizing: border-box; transition: border-color 0.2s;
+        }
+        input:focus, select:focus { outline: none; border-color: var(--primary); }
+        
+        button {
+            width: 100%; margin-top: 25px; padding: 12px; border: none;
+            border-radius: 6px; background: var(--gradient); color: white;
+            font-weight: 600; font-size: 0.95rem; cursor: pointer; transition: opacity 0.2s;
+        }
+        button:hover { opacity: 0.9; }
+        
+        .btn-small { width: auto; margin-top: 0; flex-shrink: 0; padding: 10px 20px; }
+
+        .result { 
+            margin-top: 25px; text-align: center; font-weight: 600; 
+            color: var(--accent); background: rgba(0,0,0,0.2); padding: 15px; border-radius: 6px;
+        }
+
+        .hidden { display: none !important; }
+        .nav-card { cursor: pointer; }
+        .back-btn {
+            background: transparent; border: 1px solid var(--border); color: var(--text-muted);
+            width: auto; padding: 8px 16px; margin-bottom: 20px; margin-top: 0; font-size: 0.85rem;
+        }
+        .back-btn:hover { background: rgba(255,255,255,0.05); border-color: var(--text-muted); opacity: 1; }
+        
+        .formula-text {
+            font-size: 0.75rem; color: #64748b; margin-top: 5px; font-family: 'Courier New', monospace; opacity: 0.8;
+        }
+        
+        .input-row { display: flex; gap: 10px; align-items: center; }
+        .divider {
+            text-align: center; margin: 20px 0; color: var(--text-muted); font-size: 0.75rem;
+            text-transform: uppercase; letter-spacing: 1px; position: relative;
+        }
+        .divider::before, .divider::after {
+            content: ""; display: inline-block; width: 40%; height: 1px; background: var(--border);
+            vertical-align: middle; margin: 0 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>DBG Calculator</h1>
+        <p class="subtitle">@ on Discord if any problems</p>
+    </div>
+
+    <div id="home-view" class="grid-container">
+        <div class="card nav-card" onclick="showCalculator('calc-tickets')">
+            <h3>Tickets Needed</h3>
+            <p>Calculate tickets for each rarity</p>
+        </div>
+        <div class="card nav-card" onclick="showCalculator('calc-timestones')">
+            <h3>Timestones to Days</h3>
+            <p>Convert Timestones to Days</p>
+        </div>
+        <div class="card nav-card" onclick="showCalculator('calc-labyrinth')">
+            <h3>Labyrinth Day</h3>
+            <p>Check days needed for Lab floor</p>
+        </div>
+        <div class="card nav-card" onclick="showCalculator('calc-damage')">
+            <h3>Damage x to Days</h3>
+            <p>Convert damage multiplier to Days</p>
+        </div>
+        <div class="card nav-card" onclick="showCalculator('calc-weapon')">
+            <h3>Weapon Dmg to Days</h3>
+            <p>Convert Weapon Damage to Days</p>
+        </div>
+        <div class="card nav-card" onclick="showCalculator('calc-summons')">
+            <h3>Free Summons</h3>
+            <p>Estimate daily free summons</p>
+        </div>
+        <div class="card nav-card" onclick="showCalculator('calc-tot')">
+            <h3>Total Tickets (ToT)</h3>
+            <p>Estimate Max Tickets from Daily TOT</p>
+        </div>
+        <div class="card nav-card" onclick="showCalculator('calc-apples')">
+            <h3>Apples Calculator</h3>
+            <p>Convert Day ↔ Apple Count</p>
+        </div>
+        <div class="card nav-card" onclick="showCalculator('calc-void')">
+            <h3>Void Calculator</h3>
+            <p>Convert Day ↔ Void Level</p>
+        </div>
+        <div class="card nav-card" onclick="showCalculator('calc-cyber')">
+            <h3>Cyber Calculator</h3>
+            <p>Convert Day ↔ Cyber Level</p>
+        </div>
+    </div>
+
+    <div id="calc-tickets" class="grid-container hidden">
+        <div class="card" style="grid-column: 1 / -1; max-width: 600px; margin: 0 auto;">
+            <button class="back-btn" onclick="goHome()">← Back</button>
+            <h3>Tickets Needed</h3>
+            <p class="formula-text">Formula: Copies / (Drop Rate / Pool Size)</p>
+            <label>Target Hero Rarity</label>
+            <select id="ticket-rarity">
+                <option value="common">Common</option>
+                <option value="rare">Rare</option>
+                <option value="epic">Epic</option>
+                <option value="legendary">Legendary</option>
+            </select>
+            <label>Copies Needed</label>
+            <input type="number" id="ticket-copies" placeholder="e.g. 1" min="1">
+            <button onclick="calculateTickets()">Calculate</button>
+            <div class="result" id="ticket-result">Result: --</div>
+        </div>
+    </div>
+
+    <div id="calc-timestones" class="grid-container hidden">
+        <div class="card" style="grid-column: 1 / -1; max-width: 600px; margin: 0 auto;">
+            <button class="back-btn" onclick="goHome()">← Back</button>
+            <h3>Timestones to Days</h3>
+            <p class="formula-text">Formulas: TS / 1.152 (Day) &nbsp;|&nbsp; TS / 64 (Waves)</p>
+            <label>Your Total Timestones</label>
+            <input type="number" id="ts-amount" placeholder="e.g. 1152" min="0">
+            <button onclick="calculateTimestones()">Calculate</button>
+            <div class="result" id="ts-result">Result: --</div>
+        </div>
+    </div>
+
+    <div id="calc-labyrinth" class="grid-container hidden">
+        <div class="card" style="grid-column: 1 / -1; max-width: 600px; margin: 0 auto;">
+            <button class="back-btn" onclick="goHome()">← Back</button>
+            <h3>Labyrinth Requirement</h3>
+            <p class="formula-text">Formula: 3000 + 1000(Floor-1) + 100(Room-1)</p>
+            <label>Target Floor</label>
+            <input type="number" id="lab-floor" placeholder="e.g. 1" min="1">
+            <label>Target Room</label>
+            <select id="lab-room">
+                <option value="1">Room 1</option>
+                <option value="2">Room 2</option>
+                <option value="3">Room 3</option>
+                <option value="4">Room 4</option>
+                <option value="5">Room 5</option>
+                <option value="6">Room 6</option>
+                <option value="7">Room 7</option>
+            </select>
+            <button onclick="calculateLabyrinth()">Check Requirement</button>
+            <div class="result" id="lab-result">Result: --</div>
+        </div>
+    </div>
+
+    <div id="calc-damage" class="grid-container hidden">
+        <div class="card" style="grid-column: 1 / -1; max-width: 600px; margin: 0 auto;">
+            <button class="back-btn" onclick="goHome()">← Back</button>
+            <h3>Damage x to Days</h3>
+            <p class="formula-text">Formula: log(Damage) / log(1.066)</p>
+            <label>Damage Multiplier (x)</label>
+            <input type="number" id="dmg-amount" placeholder="e.g. 2 (for 2x damage)" min="1">
+            <button onclick="calculateDamage()">Calculate Days Gained</button>
+            <div class="result" id="dmg-result">Result: --</div>
+        </div>
+    </div>
+
+    <div id="calc-weapon" class="grid-container hidden">
+        <div class="card" style="grid-column: 1 / -1; max-width: 600px; margin: 0 auto;">
+            <button class="back-btn" onclick="goHome()">← Back</button>
+            <h3>Weapon Dmg to Days</h3>
+            <p class="formula-text">Formula: (New - Old) / 78.3 * 11</p>
+            <label>Old Weapon Day</label>
+            <input type="number" id="wpn-old" placeholder="e.g. 2000" min="0">
+            <label>New Weapon Day</label>
+            <input type="number" id="wpn-new" placeholder="e.g. 2080" min="0">
+            <button onclick="calculateWeapon()">Compare Weapons</button>
+            <div class="result" id="wpn-result">Result: --</div>
+        </div>
+    </div>
+    
+    <div id="calc-summons" class="grid-container hidden">
+        <div class="card" style="grid-column: 1 / -1; max-width: 600px; margin: 0 auto;">
+            <button class="back-btn" onclick="goHome()">← Back</button>
+            <h3>Daily Free Summons</h3>
+            <p class="formula-text">Formula: floor(Day / 200)</p>
+            <label>Max Day</label>
+            <input type="number" id="summons-day" placeholder="e.g. 24362" min="0">
+            <button onclick="calculateSummons()">Calculate Daily Income</button>
+            <div class="result" id="summons-result">Result: --</div>
+        </div>
+    </div>
+    
+    <div id="calc-tot" class="grid-container hidden">
+        <div class="card" style="grid-column: 1 / -1; max-width: 600px; margin: 0 auto;">
+            <button class="back-btn" onclick="goHome()">← Back</button>
+            <h3>Total Tickets from ToT</h3>
+            <div style="text-align: center; margin-bottom: 20px;">
+                <p class="formula-text" style="font-size: 0.9rem; color: #e2e8f0; margin-bottom: 5px;">
+                    Formula: Base + (Base × Tome% × 1.1^Dark)
+                </p>
+                <p style="font-size: 0.75rem; color: #94a3b8; margin: 0;">
+                    (Base = 64.73 × Day^0.32)
+                </p>
+            </div>
+            <label>Max Day</label>
+            <input type="number" id="tot-day" placeholder="e.g. 10000" min="0">
+            <label>Tome Level (+1% each)</label>
+            <input type="number" id="tot-tome" placeholder="e.g. 6" min="0" value="0">
+            <label>Dark Book Level (Max 3)</label>
+            <input type="number" id="tot-dark" placeholder="0-3" min="0" max="3" value="0">
+            <button onclick="calculateToT()">Calculate Tickets</button>
+            <div class="result" id="tot-result">Result: --</div>
+        </div>
+    </div>
+    
+    <div id="calc-apples" class="grid-container hidden">
+        <div class="card" style="grid-column: 1 / -1; max-width: 600px; margin: 0 auto;">
+            <button class="back-btn" onclick="goHome()">← Back</button>
+            <h3>Apples Calculator</h3>
+            <p class="formula-text">Start: Day 10,220 (+1 every 365 days)</p>
+            <label>Find Apples from Day</label>
+            <div class="input-row">
+                <input type="number" id="apple-day" placeholder="Current Day" min="0">
+                <button class="btn-small" onclick="calculateApples('day')">Check</button>
+            </div>
+            <div class="divider">OR</div>
+            <label>Find Day for Target Apples</label>
+            <div class="input-row">
+                <input type="number" id="apple-target" placeholder="e.g. 10" min="1">
+                <button class="btn-small" onclick="calculateApples('target')">Check</button>
+            </div>
+            <div class="result" id="apple-result">Result: --</div>
+        </div>
+    </div>
+    
+    <div id="calc-void" class="grid-container hidden">
+        <div class="card" style="grid-column: 1 / -1; max-width: 600px; margin: 0 auto;">
+            <button class="back-btn" onclick="goHome()">← Back</button>
+            <h3>Void Calculator</h3>
+            <p class="formula-text">Start: Day 18,250 (+1 every 50 days)</p>
+            <label>Find Void Level from Day</label>
+            <div class="input-row">
+                <input type="number" id="void-day" placeholder="Current Day" min="0">
+                <button class="btn-small" onclick="calculateVoid('day')">Check</button>
+            </div>
+            <div class="divider">OR</div>
+            <label>Find Day for Target Level</label>
+            <div class="input-row">
+                <input type="number" id="void-target" placeholder="e.g. 10" min="1">
+                <button class="btn-small" onclick="calculateVoid('target')">Check</button>
+            </div>
+            <div class="result" id="void-result">Result: --</div>
+        </div>
+    </div>
+    
+    <div id="calc-cyber" class="grid-container hidden">
+        <div class="card" style="grid-column: 1 / -1; max-width: 600px; margin: 0 auto;">
+            <button class="back-btn" onclick="goHome()">← Back</button>
+            <h3>Cyber Calculator</h3>
+            <p class="formula-text">Start: Day 5,000 (+1 every 100 days)</p>
+            <label>Find Cyber Level from Day</label>
+            <div class="input-row">
+                <input type="number" id="cyber-day" placeholder="Current Day" min="0">
+                <button class="btn-small" onclick="calculateCyber('day')">Check</button>
+            </div>
+            <div class="divider">OR</div>
+            <label>Find Day for Target Level</label>
+            <div class="input-row">
+                <input type="number" id="cyber-target" placeholder="e.g. 10" min="1">
+                <button class="btn-small" onclick="calculateCyber('target')">Check</button>
+            </div>
+            <div class="result" id="cyber-result">Result: --</div>
+        </div>
+    </div>
+
+    <script>
+        // --- NAVIGATION ---
+        function showCalculator(id) {
+            document.getElementById('home-view').classList.add('hidden');
+            document.querySelectorAll('[id^="calc-"]').forEach(el => el.classList.add('hidden'));
+            const target = document.getElementById(id);
+            if(target) target.classList.remove('hidden');
+        }
+        function goHome() {
+            document.querySelectorAll('[id^="calc-"]').forEach(el => el.classList.add('hidden'));
+            document.getElementById('home-view').classList.remove('hidden');
+        }
+
+        // --- 1. TICKET LOGIC ---
+        function calculateTickets() {
+            const rarity = document.getElementById('ticket-rarity').value;
+            const copies = parseFloat(document.getElementById('ticket-copies').value);
+            const resultBox = document.getElementById('ticket-result');
+            if (!copies || copies <= 0) { resultBox.innerText = "Please enter a valid number."; return; }
+            let probability = 0;
+            if (rarity === 'common') probability = 0.66 / 6;
+            else if (rarity === 'rare') probability = 0.26 / 6;
+            else if (rarity === 'epic') probability = 0.06 / 6;
+            else if (rarity === 'legendary') probability = 0.02 / 1;
+            const ticketsNeeded = Math.ceil(copies / probability);
+            resultBox.innerHTML = `Estimated Tickets: <span style="color: #fff">${ticketsNeeded.toLocaleString()}</span>`;
+        }
+
+        // --- 2. TIMESTONES LOGIC ---
+        function calculateTimestones() {
+            const timestones = parseFloat(document.getElementById('ts-amount').value);
+            const resultBox = document.getElementById('ts-result');
+            if (!timestones || timestones < 0) { resultBox.innerText = "Please enter a valid number."; return; }
+            const days = timestones / 1.152;
+            const wavesReduced = Math.floor(timestones / 64);
+            resultBox.innerHTML = `
+                <div style="font-size:0.9rem; color:var(--text-muted); margin-bottom:5px;">Max Day for Min Waves:</div>
+                <span style="color: #fff; font-size:1.4rem;">Day ${Math.floor(days).toLocaleString()}</span>
+                <br><br>
+                <div style="font-size:0.9rem; color:var(--text-muted); margin-bottom:5px;">Waves Reduced:</div>
+                <span style="color: var(--accent); font-size:1.2rem;">-${wavesReduced.toLocaleString()} Waves</span>
+            `;
+        }
+
+        // --- 3. LABYRINTH LOGIC ---
+        function calculateLabyrinth() {
+            const floor = parseInt(document.getElementById('lab-floor').value);
+            const room = parseInt(document.getElementById('lab-room').value);
+            const resultBox = document.getElementById('lab-result');
+            if (!floor || floor < 1) { resultBox.innerText = "Please enter a valid Floor number."; return; }
+            const baseDay = 3000;
+            const floorAdd = (floor - 1) * 1000;
+            const roomAdd = (room - 1) * 100;
+            const requiredDay = baseDay + floorAdd + roomAdd;
+            resultBox.innerHTML = `
+                <div style="font-size:0.9rem; color:var(--text-muted); margin-bottom:5px;">Required Day Damage:</div>
+                <span style="color: #fff; font-size:1.4rem;">Day ${requiredDay.toLocaleString()}</span>
+            `;
+        }
+
+        // --- 4. DAMAGE TO DAYS LOGIC ---
+        function calculateDamage() {
+            const damage = parseFloat(document.getElementById('dmg-amount').value);
+            const resultBox = document.getElementById('dmg-result');
+            if (!damage || damage <= 1) { resultBox.innerText = "Enter a multiplier greater than 1x"; return; }
+            const daysGained = Math.log(damage) / Math.log(1.066);
+            const exact = daysGained.toFixed(2);
+            const down = Math.floor(daysGained);
+            const up = Math.ceil(daysGained);
+            resultBox.innerHTML = `
+                <div style="font-size:0.9rem; color:var(--text-muted); margin-bottom:5px;">Days Gained:</div>
+                <span style="color: #fff; font-size:1.6rem;">+${exact}</span><br>
+                <span style="color: var(--text-muted); font-size:0.9rem;">(${down} ▼ &nbsp;|&nbsp; ${up} ▲)</span>
+            `;
+        }
+
+        // --- 5. WEAPON LOGIC ---
+        function calculateWeapon() {
+            const oldDay = parseFloat(document.getElementById('wpn-old').value);
+            const newDay = parseFloat(document.getElementById('wpn-new').value);
+            const resultBox = document.getElementById('wpn-result');
+            if (!oldDay || !newDay) { resultBox.innerText = "Please enter both Weapon Days."; return; }
+            const diff = newDay - oldDay;
+            const daysGained = (diff / 78.3) * 11;
+            const exact = daysGained.toFixed(2);
+            const down = Math.floor(daysGained);
+            const up = Math.ceil(daysGained);
+            resultBox.innerHTML = `
+                <div style="font-size:0.9rem; color:var(--text-muted); margin-bottom:5px;">Progress Gained:</div>
+                <span style="color: #fff; font-size:1.6rem;">${daysGained > 0 ? '+' : ''}${exact} Days</span><br>
+                 <span style="color: var(--text-muted); font-size:0.9rem;">(${down} ▼ &nbsp;|&nbsp; ${up} ▲)</span>
+            `;
+        }
+        
+        // --- 6. FREE SUMMONS LOGIC ---
+        function calculateSummons() {
+            const day = parseFloat(document.getElementById('summons-day').value);
+            const resultBox = document.getElementById('summons-result');
+            if (!day || day < 0) { resultBox.innerText = "Please enter a valid Day."; return; }
+            const totalTickets = Math.floor(day / 200);
+            resultBox.innerHTML = `
+                <div style="font-size:0.9rem; color:var(--text-muted); margin-bottom:5px;">Daily Free Summons:</div>
+                <span style="color: #fff; font-size:1.6rem;">${totalTickets.toLocaleString()}</span>
+            `;
+        }
+        
+        // --- 7. ToT TICKETS LOGIC ---
+        function calculateToT() {
+            const day = parseFloat(document.getElementById('tot-day').value);
+            const tomeLevel = parseFloat(document.getElementById('tot-tome').value) || 0;
+            let darkLevel = parseFloat(document.getElementById('tot-dark').value) || 0;
+            const resultBox = document.getElementById('tot-result');
+            if (!day || day < 0) { resultBox.innerText = "Please enter a valid Day."; return; }
+            if (darkLevel > 3) darkLevel = 3;
+            if (darkLevel < 0) darkLevel = 0;
+            
+            let baseTickets = 0;
+            if (day < 5000) {
+                baseTickets = Math.floor(day / 5);
+            } else {
+                const baseConst = 64.7273575878291;
+                const powerConst = 0.32151570515729;
+                baseTickets = baseConst * Math.pow(day, powerConst);
+            }
+            const tomePercent = tomeLevel * 0.01;
+            const darkMult = Math.pow(1.1, darkLevel);
+            const effectiveBonus = baseTickets * tomePercent * darkMult;
+            const finalTickets = Math.round(baseTickets + effectiveBonus);
+            resultBox.innerHTML = `
+                <div style="font-size:0.9rem; color:var(--text-muted); margin-bottom:5px;">Total Tickets:</div>
+                <span style="color: #fff; font-size:1.6rem;">${finalTickets.toLocaleString()}</span><br>
+            `;
+        }
+
+        // --- 8. APPLES LOGIC (2-WAY) ---
+        function calculateApples(mode) {
+            const resultBox = document.getElementById('apple-result');
+            const startDay = 10220;
+            const cycle = 365;
+            if (mode === 'day') {
+                const day = parseFloat(document.getElementById('apple-day').value);
+                if (!day || day < 0) { resultBox.innerText = "Enter a valid Day."; return; }
+                let count = 0;
+                let nextAppleDay = startDay;
+                let daysLeft = 0;
+                if (day < startDay) {
+                    count = 0;
+                    nextAppleDay = startDay;
+                    daysLeft = startDay - day;
+                } else {
+                    const diff = day - startDay;
+                    const earned = Math.floor(diff / cycle);
+                    count = 1 + earned;
+                    // Logic: You get apple at 10220, 10585, 10950.
+                    // If day = 10220, count = 1. Next is 10585.
+                    // 10220 + (1 * 365) = 10585.
+                    nextAppleDay = startDay + (count * cycle);
+                    daysLeft = nextAppleDay - day;
+                }
+                resultBox.innerHTML = `
+                    <div style="font-size:0.9rem; color:var(--text-muted); margin-bottom:5px;">Total Apples:</div>
+                    <span style="color: #fff; font-size:1.6rem;">${count.toLocaleString()}</span><br>
+                    <div style="font-size:0.8rem; color:var(--text-muted); margin-top:5px;">Next at Day ${nextAppleDay.toLocaleString()} (+${daysLeft.toLocaleString()} Days)</div>
+                `;
+            } else if (mode === 'target') {
+                const target = parseFloat(document.getElementById('apple-target').value);
+                if (!target || target < 1) { resultBox.innerText = "Enter at least 1 Apple."; return; }
+                const requiredDay = startDay + ((target - 1) * cycle);
+                resultBox.innerHTML = `
+                    <div style="font-size:0.9rem; color:var(--text-muted); margin-bottom:5px;">Day Needed for ${target} Apples:</div>
+                    <span style="color: #fff; font-size:1.6rem;">Day ${requiredDay.toLocaleString()}</span>
+                `;
+            }
+        }
+
+        // --- 9. VOID LEVEL LOGIC (2-WAY) ---
+        function calculateVoid(mode) {
+            const resultBox = document.getElementById('void-result');
+            const startDay = 18250;
+            const cycle = 50;
+            if (mode === 'day') {
+                const day = parseFloat(document.getElementById('void-day').value);
+                if (!day || day < 0) { resultBox.innerText = "Enter a valid Day."; return; }
+                let level = 0;
+                let nextLevelDay = startDay;
+                let daysLeft = 0;
+                if (day < startDay) {
+                    level = 0;
+                    nextLevelDay = startDay;
+                    daysLeft = startDay - day;
+                } else {
+                    const diff = day - startDay;
+                    // Level is 0 at 18250? No, usually Level 1.
+                    // Formula requested: floor((day - start) / 50).
+                    // If day=18250, floor(0) = 0.
+                    // If day=18300, floor(1) = 1.
+                    const earned = Math.floor(diff / cycle);
+                    level = earned; 
+                    // If level 0, next is level 1 at 18300?
+                    // "Next level" target is usually current level + 1.
+                    // If level is 0, next is 1. Day = Start + (1 * 50).
+                    // If level is 1, next is 2. Day = Start + (2 * 50).
+                    nextLevelDay = startDay + ((level + 1) * cycle);
+                    daysLeft = nextLevelDay - day;
+                }
+                resultBox.innerHTML = `
+                    <div style="font-size:0.9rem; color:var(--text-muted); margin-bottom:5px;">Void Level:</div>
+                    <span style="color: #fff; font-size:1.6rem;">${level.toLocaleString()}</span><br>
+                    <div style="font-size:0.8rem; color:var(--text-muted); margin-top:5px;">Next at Day ${nextLevelDay.toLocaleString()} (+${daysLeft.toLocaleString()} Days)</div>
+                `;
+            } else if (mode === 'target') {
+                const target = parseFloat(document.getElementById('void-target').value);
+                if (target < 0) { resultBox.innerText = "Enter valid Level."; return; }
+                const requiredDay = startDay + (target * cycle);
+                resultBox.innerHTML = `
+                    <div style="font-size:0.9rem; color:var(--text-muted); margin-bottom:5px;">Day Needed for Level ${target}:</div>
+                    <span style="color: #fff; font-size:1.6rem;">Day ${requiredDay.toLocaleString()}</span>
+                `;
+            }
+        }
+
+        // --- 10. CYBER CALCULATOR (2-WAY) ---
+        function calculateCyber(mode) {
+            const resultBox = document.getElementById('cyber-result');
+            const startDay = 5000;
+            const cycle = 100;
+            if (mode === 'day') {
+                const day = parseFloat(document.getElementById('cyber-day').value);
+                if (!day || day < 0) { resultBox.innerText = "Enter a valid Day."; return; }
+                let level = 0;
+                let nextLevelDay = startDay;
+                let daysLeft = 0;
+                if (day < startDay) {
+                    level = 0;
+                    nextLevelDay = startDay;
+                    daysLeft = startDay - day;
+                } else {
+                    const diff = day - startDay;
+                    const earned = Math.floor(diff / cycle);
+                    level = earned; // floor((Day - 5000) / 100)
+                    nextLevelDay = startDay + ((level + 1) * cycle);
+                    daysLeft = nextLevelDay - day;
+                }
+                resultBox.innerHTML = `
+                    <div style="font-size:0.9rem; color:var(--text-muted); margin-bottom:5px;">Cyber Level:</div>
+                    <span style="color: #fff; font-size:1.6rem;">${level.toLocaleString()}</span><br>
+                    <div style="font-size:0.8rem; color:var(--text-muted); margin-top:5px;">Next at Day ${nextLevelDay.toLocaleString()} (+${daysLeft.toLocaleString()} Days)</div>
+                `;
+            } else if (mode === 'target') {
+                const target = parseFloat(document.getElementById('cyber-target').value);
+                if (target < 0) { resultBox.innerText = "Enter valid Level."; return; }
+                const requiredDay = startDay + (target * cycle);
+                resultBox.innerHTML = `
+                    <div style="font-size:0.9rem; color:var(--text-muted); margin-bottom:5px;">Day Needed for Level ${target}:</div>
+                    <span style="color: #fff; font-size:1.6rem;">Day ${requiredDay.toLocaleString()}</span>
+                `;
+            }
+        }
+    </script>
+</body>
+</html>

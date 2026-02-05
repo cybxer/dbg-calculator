@@ -1,0 +1,179 @@
+/* style.css - Complete Version */
+
+:root {
+    /* Modern Gaming Palette */
+    --bg-color: #0f1219;       
+    --card-bg: #1a1f2b;        
+    --primary: #6c5ce7;        
+    --secondary: #00cec9;      
+    --text: #dfe6e9;           
+    --text-muted: #b2bec3;     
+    --gradient: linear-gradient(135deg, #6c5ce7 0%, #a29bfe 100%);
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text);
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    padding: 40px 20px;
+}
+
+/* The Header */
+.header {
+    text-align: center;
+    margin-bottom: 50px;
+}
+
+h1 {
+    margin: 0;
+    font-size: 2.5rem;
+    background: -webkit-linear-gradient(45deg, #00cec9, #6c5ce7);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    color: transparent; 
+}
+
+p.subtitle {
+    color: var(--text-muted);
+    margin-top: 10px;
+}
+
+/* Grid Layout */
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 30px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* The Card Design */
+.card {
+    background-color: var(--card-bg);
+    border-radius: 16px;
+    padding: 25px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    border: 1px solid rgba(255,255,255,0.05);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 35px rgba(108, 92, 231, 0.2); 
+    border-color: rgba(108, 92, 231, 0.3);
+}
+
+.card h3 {
+    margin-top: 0;
+    color: white;
+    font-size: 1.2rem;
+    border-left: 4px solid var(--primary); 
+    padding-left: 10px;
+}
+
+/* Inputs & Selects */
+label {
+    display: block;
+    margin-top: 15px;
+    margin-bottom: 5px;
+    font-size: 0.9rem;
+    color: var(--text-muted);
+}
+
+input, select {
+    width: 100%;
+    padding: 12px;
+    background: #0f1219;
+    border: 1px solid #2d3436;
+    border-radius: 8px;
+    color: white;
+    font-family: inherit;
+    box-sizing: border-box; 
+}
+
+input:focus, select:focus {
+    outline: none;
+    border-color: var(--primary);
+}
+
+/* The Button */
+button {
+    width: 100%;
+    margin-top: 20px;
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    background: var(--gradient);
+    color: white;
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(108, 92, 231, 0.4);
+    transition: opacity 0.2s;
+}
+
+button:hover {
+    opacity: 0.9;
+}
+
+/* Result Area */
+.result {
+    margin-top: 20px;
+    text-align: center;
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: var(--secondary);
+    min-height: 1.5em; 
+}
+
+/* --- Navigation & Utility Styles --- */
+
+/* IMPORTANT: This class hides the pages you aren't looking at */
+.hidden {
+    display: none !important;
+}
+
+/* The clickable cards on the landing page */
+.nav-card {
+    cursor: pointer;
+    text-align: center;
+    transition: transform 0.2s, border-color 0.2s;
+}
+
+.nav-card:hover {
+    transform: translateY(-5px);
+    border-color: var(--primary);
+}
+
+.nav-card h3 {
+    border: none; 
+    padding: 0;
+    margin-bottom: 10px;
+    font-size: 1.3rem;
+}
+
+.nav-card p {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    margin: 0;
+}
+
+/* The Back Button */
+.back-btn {
+    background: none;
+    border: 1px solid var(--text-muted);
+    color: var(--text-muted);
+    padding: 8px 16px;
+    margin-bottom: 20px;
+    width: auto;
+    display: inline-block;
+    box-shadow: none;
+}
+
+.back-btn:hover {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: white;
+    color: white;
+}
