@@ -7,7 +7,7 @@
 **Website with various built-in calculators for Days Bygone**
 ---
 
-## Formula Reference
+## Formula References
 
 The folowing formulas are used:
 
