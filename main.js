@@ -5,29 +5,28 @@
 document.addEventListener('DOMContentLoaded', () => {
     const grid = document.getElementById('home-view');
     
-    // Only run this if we are on the home page
+    // Only run this if we are on the home page (where #home-view exists)
     if (grid) {
-        // CONFIG: Updated descriptions to match your screenshot
+        // CONFIG: Added 'pages/' to the file paths
         const tools = [
-            { file: 'tickets.html',    title: 'Tickets Needed',      desc: 'Calculate tickets for hero levels.' },
-            { file: 'timestones.html', title: 'Timestones to Days',  desc: 'Convert rewinds/stones to Day count.' },
-            { file: 'labyrinth.html',  title: 'Labyrinth Unlock',    desc: 'Check days needed for Lab floor.' },
-            { file: 'damage.html',     title: 'Damage x to Days',    desc: 'Convert damage multiplier to Days.' },
-            { file: 'weapon.html',     title: 'Weapon Dmg to Days',  desc: 'Evaluate weapon strength.' },
-            { file: 'summons.html',    title: 'Free Summons',        desc: 'Estimate daily ticket income.' },
-            { file: 'tot.html',        title: 'Total Tickets (ToT)', desc: 'Tickets based on Time of Time.' },
-            { file: 'apples.html',     title: 'Apples Calculator',   desc: 'Convert Day ↔ Apple Count.' },
-            { file: 'void.html',       title: 'Void Calculator',     desc: 'Convert Day ↔ Void Level.' },
-            { file: 'cyber.html',      title: 'Cyber Calculator',    desc: 'Convert Day ↔ Cyber Level.' },
-            { file: 'changelog.html',  title: 'Changelog',           desc: 'View latest updates and fixes.' }
+            { file: 'pages/tickets.html',    title: 'Tickets Needed',      desc: 'Calculate tickets for each rarity' },
+            { file: 'pages/timestones.html', title: 'Timestones to Days',  desc: 'Convert Timestones to Days' },
+            { file: 'pages/labyrinth.html',  title: 'Labyrinth Day',       desc: 'Check days needed for Lab floor' },
+            { file: 'pages/damage.html',     title: 'Damage x to Days',    desc: 'Convert damage multiplier to Days' },
+            { file: 'pages/weapon.html',     title: 'Weapon Dmg to Days',  desc: 'Convert Weapon Damage to Days' },
+            { file: 'pages/summons.html',    title: 'Free Summons',        desc: 'Estimate daily free summons' },
+            { file: 'pages/tot.html',        title: 'Total Tickets (ToT)', desc: 'Estimate Max Tickets from Daily TOT' },
+            { file: 'pages/apples.html',     title: 'Apples Calculator',   desc: 'Convert Day ↔ Apple Count' },
+            { file: 'pages/void.html',       title: 'Void Calculator',     desc: 'Convert Day ↔ Void Level' },
+            { file: 'pages/cyber.html',      title: 'Cyber Calculator',    desc: 'Convert Day ↔ Cyber Level' },
+            { file: 'pages/changelog.html',  title: 'Changelog',           desc: 'View latest updates and fixes' }
         ];
 
-        // Generate the HTML for the menu
+        // Loop through the list and create the HTML automatically
         tools.forEach(tool => {
             const card = document.createElement('a');
             card.href = tool.file;
             card.className = 'card nav-card';
-            // Clean layout without emojis, using the CSS accent bars
             card.innerHTML = `
                 <h3>${tool.title}</h3>
                 <p>${tool.desc}</p>
@@ -36,7 +35,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 });
-
 /* ==================== */
 /* CALCULATOR LOGIC     */
 /* ==================== */
