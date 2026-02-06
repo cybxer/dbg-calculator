@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Labyrinth Unlock | DBG Calculator</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="header">
+        <h1>DBG Calculator</h1>
+        <p class="subtitle">@ cyberlith on Discord</p>
+    </div>
+
+    <div class="grid-container">
+        <div class="card" style="margin: 0 auto; max-width: 600px;">
+            <a href="index.html" class="back-btn">← Back to Menu</a>
+            <h3>Labyrinth Requirement</h3>
+            <p class="formula-text">Formula: 3000 + 1000(Floor-1) + 100(Room-1)</p>
+            
+            <label>Target Floor</label>
+            <input type="number" id="lab-floor" placeholder="e.g. 1" min="1">
+
+            <label>Target Room</label>
+            <select id="lab-room">
+                <option value="1">Room 1</option>
+                <option value="2">Room 2</option>
+                <option value="3">Room 3</option>
+                <option value="4">Room 4</option>
+                <option value="5">Room 5</option>
+                <option value="6">Room 6</option>
+                <option value="7">Room 7</option>
+            </select>
+
+            <button onclick="calculateLabyrinth()">Check Requirement</button>
+            <div class="result" id="lab-result">Result: --</div>
+        </div>
+    </div>
+
+    <div class="footer"><p>discord.gg/daysbygone</p></div>
+    <script src="main.js"></script>
+</body>
+</html>

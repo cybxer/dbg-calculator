@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Changelog | DBG Calculator</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .changelog-list { list-style: none; padding: 0; margin: 0; }
+        .changelog-list li { margin-bottom: 8px; color: var(--text-muted); font-size: 0.9rem; position: relative; padding-left: 20px; }
+        .changelog-list li::before { content: "•"; color: var(--primary); font-weight: bold; position: absolute; left: 0; }
+        .version-date { font-size: 0.75rem; color: var(--accent); margin-bottom: 10px; display: block; text-transform: uppercase; letter-spacing: 1px; }
+        .update-card { margin-bottom: 20px; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>DBG Calculator</h1>
+        <p class="subtitle">Version History</p>
+    </div>
+    <div class="grid-container" style="max-width: 800px;">
+        <div style="grid-column: 1 / -1;">
+            <a href="index.html" class="back-btn">← Back to Menu</a>
+        </div>
+        <div class="card update-card" style="grid-column: 1 / -1;">
+            <h3>v1.2 - Formula Fixes</h3>
+            <span class="version-date">Current Version</span>
+            <ul class="changelog-list">
+                <li><strong>Subpages:</strong> Turned all sections into subpages instead of one giant page</li>
+                <li><strong>Void & Cyber:</strong> Updated them since they were always 50 and 100 off respectively </li>
+                <li><strong>Added Changelogs</strong> Will update whenever anything is changed</li>
+            </ul>
+        </div>
+        <div class="card update-card" style="grid-column: 1 / -1;">
+            <h3>v1.1 - Release  </h3>
+            <span class="version-date">Previous Update</span>
+            <ul class="changelog-list">
+                <li><strong>Release:</strong>Website was released</li>
+            </ul>
+        </div>
+    </div>
+    <div class="footer"><p>discord.gg/daysbygone</p></div>
+</body>
+</html>
